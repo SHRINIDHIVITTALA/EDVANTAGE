@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources Upload - EDVANTAGE</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Additional Styles for Beautification */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .main-content {
+            padding: 40px;
+            margin-left: 50px;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .sidebar.active + .main-content {
+            margin-left: 250px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        #uploadForm {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #uploadForm label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+
+        #uploadForm input[type="file"],
+        #uploadForm select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            background: #f9f9f9;
+            transition: border-color 0.3s ease;
+        }
+
+        #uploadForm input[type="file"]:focus,
+        #uploadForm select:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        #uploadForm button {
+            width: 100%;
+            padding: 12px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #uploadForm button:hover {
+            background-color: #34495e;
+        }
+
+        #uploadMessage {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            #uploadForm {
+                padding: 20px;
+            }
+        }
+
+        .top-logout-btn {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        z-index: 1000;
+    }
+    </style>
+</head>
+<body>
+    <button class="top-logout-btn" onclick="logout()">Logout</button>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <h2>EDVANTAGE</h2>
+        <ul>
+            <li><a href="index.html">🏠 Dashboard</a></li>
+            <li><a href="resources.html">📁 Resources Upload</a></li>
+            <li><a href="attendance.html">✅ Attendance Update</a></li>
+            <li><a href="performance.html">📊 Student Performance</a></li>
+            <li><a href="events.html">📅 Event Notifications</a></li>
+            <li><a href="leave-approval.html">📝 Leave Approval</a></li>
+            <li><a href="daily-planner.html">📋 Daily Planner</a></li>
+        </ul>
+    </div>
+
+    <!-- Hamburger Menu -->
+    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>Upload Resources</h1>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <label for="file">Select File:</label>
+            <input type="file" id="file" name="file" required>
+        
+            <label for="category">Category:</label>
+            <select id="category" name="category">
+                <option value="assignment">Assignment</option>
+                <option value="notes">Notes</option>
+                <option value="reference">Reference Material</option>
+            </select>
+        
+            <button type="submit">Upload</button>
+        </form>
+        
+        <div id="uploadMessage"></div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("active");
+        }
+
+        document.getElementById("uploadForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this); // Create FormData object
+
+            try {
+                const response = await fetch('http://localhost:5000/upload', {
+                    method: 'POST',
+                    body: formData, // Send form data
+                });
+
+                const result = await response.json(); // Parse JSON response
+                document.getElementById("uploadMessage").innerText = result.message;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById("uploadMessage").innerText = 'Failed to upload file';
+            }
+        });
+
+        function logout() {
+    localStorage.removeItem('teacherId');
+    localStorage.removeItem('teacherName');
+    window.location.href = "teachers-login.html";
+}
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - EDVANTAGE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary: #3498db;
+      --secondary: #2c3e50;
+      --accent: #e74c3c;
+      --light: #ecf0f1;
+      --dark: #2c3e50;
+      --success: #2ecc71;
+      --warning: #f39c12;
+      --danger: #e74c3c;
+      --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f7fa;
+      color: var(--dark);
+    }
+    
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar Styles */
+    .sidebar {
+      width: 250px;
+      background-color: var(--secondary);
+      color: white;
+      padding: 20px 0;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+    }
+    
+    .sidebar-header {
+      padding: 0 20px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .sidebar-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: white;
+    }
+    
+    .sidebar-nav {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .sidebar-nav li a {
+      display: flex;
+      align-items: center;
+      color: white;
+      text-decoration: none;
+      padding: 12px 20px;
+      transition: all 0.3s;
+      border-left: 4px solid transparent;
+    }
+    
+    .sidebar-nav li a:hover,
+    .sidebar-nav li a.active {
+      background-color: rgba(255,255,255,0.1);
+      border-left: 4px solid var(--primary);
+    }
+    
+    .sidebar-nav li a i {
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+    }
+    
+    /* Main Content Styles */
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      background-color: #f5f7fa;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    
+    .header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      color: var(--secondary);
+      font-weight: 600;
+    }
+    
+    .logout-btn {
+      background-color: var(--danger);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+    }
+    
+    .logout-btn:hover {
+      background-color: #c0392b;
+    }
+    
+    .logout-btn i {
+      margin-right: 8px;
+    }
+    
+    /* Card Styles */
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: var(--card-shadow);
+    }
+    
+    .card h3 {
+      margin-top: 0;
+      color: var(--secondary);
+      font-size: 1.4rem;
+      font-weight: 600;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--secondary);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+    
+    textarea.form-control {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    /* Button Styles */
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .btn i {
+      margin-right: 8px;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #2980b9;
+    }
+    
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #1a252f;
+    }
+    
+    .btn-success {
+      background-color: var(--success);
+      color: white;
+    }
+    
+    .btn-success:hover {
+      background-color: #27ae60;
+    }
+    
+    .btn-danger {
+      background-color: var(--danger);
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background-color: #c0392b;
+    }
+    
+    /* Table Styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+    }
+    
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    
+    th {
+      background-color: var(--secondary);
+      color: white;
+      font-weight: 500;
+    }
+    
+    tr:hover td {
+      background-color: #f9f9f9;
+    }
+    
+    .action-btns {
+      display: flex;
+      gap: 8px;
+    }
+    
+    /* Tab Styles */
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    /* Import Section */
+    .import-section {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+    
+    .file-input-wrapper {
+      position: relative;
+      margin-bottom: 15px;
+    }
+    
+    .file-input-wrapper input[type="file"] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+    
+    .file-input-label {
+      display: block;
+      padding: 12px;
+      border: 2px dashed #ddd;
+      border-radius: 6px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .file-input-label:hover {
+      border-color: var(--primary);
+      background-color: rgba(52, 152, 219, 0.05);
+    }
+    
+    .file-input-label i {
+      display: block;
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+    
+    /* Loading Spinner */
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top: 4px solid var(--primary);
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 992px) {
+      .container {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        height: auto;
+      }
+      
+      .main-content {
+        padding: 20px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .logout-btn {
+        margin-top: 15px;
+      }
+      
+      table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+    
+    /* Status Badges */
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .badge-success {
+      background-color: rgba(46, 204, 113, 0.2);
+      color: #27ae60;
+    }
+    
+    .badge-danger {
+      background-color: rgba(231, 76, 60, 0.2);
+      color: #c0392b;
+    }
+    
+    /* Multiple Select */
+    select[multiple] {
+      min-height: 120px;
+    }
+    
+    /* Alert Messages */
+    .alert {
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    
+    .alert-success {
+      background-color: rgba(46, 204, 113, 0.2);
+      color: #27ae60;
+      border-left: 4px solid var(--success);
+    }
+    
+    .alert-danger {
+      background-color: rgba(231, 76, 60, 0.2);
+      color: #c0392b;
+      border-left: 4px solid var(--danger);
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h2><i class="fas fa-graduation-cap"></i> EDVANTAGE</h2>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#" onclick="showTab('teacher')" class="active"><i class="fas fa-chalkboard-teacher"></i> Teachers</a></li>
+        <li><a href="#" onclick="showTab('student')"><i class="fas fa-user-graduate"></i> Students</a></li>
+        <li><a href="#" onclick="showTab('course')"><i class="fas fa-book"></i> Courses</a></li>
+        <li><a href="#" onclick="showTab('subject')"><i class="fas fa-book-open"></i> Subjects</a></li>
+        <li><a href="#" onclick="showTab('assign')"><i class="fas fa-users"></i> Classes</a></li>
+        <li><a href="#" onclick="showTab('view-all')"><i class="fas fa-table"></i> View All</a></li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="header">
+        <h1>Admin Dashboard</h1>
+        <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+
+      <!-- Teacher Tab -->
+      <div id="teacher" class="tab-content active">
+        <div class="card">
+          <h3><i class="fas fa-chalkboard-teacher"></i> Add Teacher</h3>
+          <div class="form-group">
+            <label for="teacher-id">Teacher ID</label>
+            <input type="text" id="teacher-id" class="form-control" placeholder="Enter Teacher ID">
+          </div>
+          <div class="form-group">
+            <label for="teacher-name">Full Name</label>
+            <input type="text" id="teacher-name" class="form-control" placeholder="Enter teacher name">
+          </div>
+          <div class="form-group">
+            <label for="teacher-email">Email</label>
+            <input type="email" id="teacher-email" class="form-control" placeholder="Enter teacher email">
+          </div>
+          <div class="form-group">
+            <label for="teacher-phone">Phone Number</label>
+            <input type="tel" id="teacher-phone" class="form-control" placeholder="Enter teacher phone number">
+          </div>
+          <div class="form-group">
+            <label for="teacher-password">Password</label>
+            <input type="password" id="teacher-password" class="form-control" placeholder="Enter password">
+          </div>
+          <button class="btn btn-primary" onclick="addTeacher()"><i class="fas fa-plus"></i> Add Teacher</button>
+        </div>
+      </div>
+
+      <!-- Student Tab -->
+      <div id="student" class="tab-content">
+        <div class="card">
+          <h3><i class="fas fa-user-graduate"></i> Add Student</h3>
+          <div class="form-group">
+            <label for="student-id">Student ID</label>
+            <input type="text" id="student-id" class="form-control" placeholder="Enter student ID">
+          </div>
+          <div class="form-group">
+            <label for="student-name">Full Name</label>
+            <input type="text" id="student-name" class="form-control" placeholder="Enter student name">
+          </div>
+          <div class="form-group">
+            <label for="student-email">Email</label>
+            <input type="email" id="student-email" class="form-control" placeholder="Enter student email">
+          </div>
+          <div class="form-group">
+            <label for="student-phone">Phone Number</label>
+            <input type="tel" id="student-phone" class="form-control" placeholder="Enter student phone number">
+          </div>
+          <div class="form-group">
+            <label for="student-password">Password</label>
+            <input type="password" id="student-password" class="form-control" placeholder="Enter password">
+          </div>
+          <button class="btn btn-primary" onclick="addStudent()"><i class="fas fa-plus"></i> Add Student</button>
+
+          <div class="import-section">
+            <h4><i class="fas fa-file-import"></i> Import Students</h4>
+            <div class="file-input-wrapper">
+              <input type="file" id="excel-file" accept=".xlsx, .xls, .csv">
+              <label for="excel-file" class="file-input-label">
+                <i class="fas fa-file-excel"></i>
+                <span>Choose Excel File or Drag & Drop</span>
+                <small>.xlsx, .xls, or .csv files only</small>
+              </label>
+            </div>
+            <div>
+              <button class="btn btn-success" onclick="importStudentsFromExcel()">
+                <i class="fas fa-file-import"></i> Import Students
+              </button>
+              <button class="btn btn-secondary" onclick="downloadSampleExcel()" style="margin-left: 10px;">
+                <i class="fas fa-file-download"></i> Download Sample
+              </button>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Course Tab -->
+      <div id="course" class="tab-content">
+        <div class="card">
+          <h3><i class="fas fa-book"></i> Add Course</h3>
+          <div class="form-group">
+            <label for="course-name">Course Name</label>
+            <input type="text" id="course-name" class="form-control" placeholder="Enter course name">
+          </div>
+          <button class="btn btn-primary" onclick="addCourse()"><i class="fas fa-plus"></i> Add Course</button>
+        </div>
+      </div>
+
+      <!-- Subject Tab -->
+      <div id="subject" class="tab-content">
+        <div class="card">
+          <h3><i class="fas fa-book-open"></i> Add Subject</h3>
+          <div class="form-group">
+            <label for="subject-course-dropdown">Course</label>
+            <select id="subject-course-dropdown" class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label for="subject-name">Subject Name</label>
+            <input type="text" id="subject-name" class="form-control" placeholder="Enter subject name">
+          </div>
+          <button class="btn btn-primary" onclick="addSubject()"><i class="fas fa-plus"></i> Add Subject</button>
+        </div>
+      </div>
+
+      <!-- Assign Class Tab -->
+      <div id="assign" class="tab-content">
+        <div class="card">
+          <h3><i class="fas fa-users"></i> Assign Class</h3>
+          <div class="form-group">
+            <label for="class-name">Class Name</label>
+            <input type="text" id="class-name" class="form-control" placeholder="Enter class name">
+          </div>
+          <div class="form-group">
+            <label for="teacher-dropdown">Teacher</label>
+            <select id="teacher-dropdown" class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label for="students-dropdown">Students</label>
+            <select id="students-dropdown" multiple class="form-control"></select>
+          </div>
+          <div class="form-group">
+            <label for="assign-course-dropdown">Course</label>
+            <select id="assign-course-dropdown" class="form-control" onchange="loadSubjectsByCourse()"></select>
+          </div>
+          <div class="form-group">
+            <label for="assign-subject-dropdown">Subject</label>
+            <select id="assign-subject-dropdown" class="form-control"></select>
+          </div>
+          <button class="btn btn-primary" onclick="assignClass()"><i class="fas fa-plus"></i> Assign Class</button>
+        </div>
+      </div>
+
+      <!-- View All Tab -->
+      <div id="view-all" class="tab-content">
+        <div class="card">
+          <h3><i class="fas fa-table"></i> View All Data</h3>
+
+          <h4><i class="fas fa-chalkboard-teacher"></i> Teachers</h4>
+          <table id="view-all-teachers">
+            <thead>
+              <tr>
+                <th>Teacher ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+
+          <h4 style="margin-top: 30px;"><i class="fas fa-user-graduate"></i> Students</h4>
+          <table id="view-all-students">
+            <thead>
+              <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+
+          <h4 style="margin-top: 30px;"><i class="fas fa-book"></i> Courses</h4>
+          <table id="view-all-courses">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+
+          <h4 style="margin-top: 30px;"><i class="fas fa-book-open"></i> Subjects</h4>
+          <table id="view-all-subjects">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Course</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+
+          <h4 style="margin-top: 30px;"><i class="fas fa-users"></i> Assigned Classes</h4>
+          <table id="view-all-classes">
+            <thead>
+              <tr>
+                <th>Class Name</th>
+                <th>Teacher</th>
+                <th>Students</th>
+                <th>Course</th>
+                <th>Subject</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Keep all your existing JavaScript functions -->
+  <script>
+
+function logout() {
+            localStorage.removeItem('AdminId');
+            localStorage.removeItem('AdminName');
+            localStorage.removeItem('AdminEmail');
+            localStorage.removeItem('AdminPhone');
+            localStorage.removeItem('AdminPassword');
+            window.location.href = "admin_login.html";
+        }
+    // Function to show the selected tab
+    function showTab(tabId) {
+      const contents = document.querySelectorAll('.tab-content');
+      const buttons = document.querySelectorAll('.tab-buttons button');
+
+      contents.forEach(c => c.classList.remove('active'));
+      buttons.forEach(b => b.classList.remove('active'));
+
+      document.getElementById(tabId).classList.add('active');
+      event.target.classList.add('active');
+
+      if (tabId === 'teacher') loadTeachersDropdown();
+      if (tabId === 'student') loadStudentsDropdown();
+      if (tabId === 'course') loadCoursesDropdown();
+      if (tabId === 'subject') loadSubjectsDropdown();
+      if (tabId === 'assign') loadDropdowns();
+      if (tabId === 'view-all') loadAllData();
+    }
+
+    // Function to load all dropdowns
+    async function loadDropdowns() {
+      await loadTeachersDropdown();
+      await loadStudentsDropdown();
+      await loadCoursesDropdown();
+      await loadSubjectsDropdown();
+    }
+
+    // Function to load teachers dropdown
+    async function loadTeachersDropdown() {
+      const res = await fetch('http://localhost:5000/teachers');
+      const data = await res.json();
+      const dropdown = document.getElementById('teacher-dropdown');
+      dropdown.innerHTML = '';
+      data.forEach(t => {
+        const option = document.createElement('option');
+        option.value = t._id;
+        option.textContent = t.name;
+        dropdown.appendChild(option);
+      });
+    }
+
+    // Function to load students dropdown
+    async function loadStudentsDropdown() {
+      const res = await fetch('http://localhost:5000/students');
+      const data = await res.json();
+      const dropdown = document.getElementById('students-dropdown');
+      dropdown.innerHTML = '';
+      data.forEach(s => {
+        const option = document.createElement('option');
+        option.value = s._id;
+        option.textContent = s.name;
+        dropdown.appendChild(option);
+      });
+    }
+
+    // Function to load courses dropdown
+    async function loadCoursesDropdown() {
+      const res = await fetch('http://localhost:5000/courses');
+      const data = await res.json();
+      const dropdowns = [document.getElementById('subject-course-dropdown'), document.getElementById('assign-course-dropdown')];
+      dropdowns.forEach(dropdown => {
+        dropdown.innerHTML = '';
+        data.forEach(c => {
+          const option = document.createElement('option');
+          option.value = c._id;
+          option.textContent = c.name;
+          dropdown.appendChild(option);
+        });
+      });
+    }
+
+    // Function to load subjects dropdown
+    async function loadSubjectsDropdown() {
+      const res = await fetch('http://localhost:5000/subjects');
+      const data = await res.json();
+      const dropdown = document.getElementById('assign-subject-dropdown');
+      dropdown.innerHTML = '';
+      data.forEach(s => {
+        const option = document.createElement('option');
+        option.value = s._id;
+        option.textContent = s.name;
+        dropdown.appendChild(option);
+      });
+    }
+
+    // Function to add a teacher
+    async function addTeacher() {
+  const teacherId = document.getElementById('teacher-id').value.trim();
+  const name = document.getElementById('teacher-name').value.trim();
+  const email = document.getElementById('teacher-email').value.trim();
+  const phone = document.getElementById('teacher-phone').value.trim();
+  const password = document.getElementById('teacher-password').value.trim();
+
+  if (!teacherId || !name || !email || !phone || !password) {
+    alert('Please fill all fields.');
+    return;
+  }
+
+  try {
+    const res = await fetch('http://localhost:5000/add-teacher', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ teacherId, name, email, phone, password })
+    });
+
+    if (!res.ok) {
+      throw new Error('Failed to add teacher');
+    }
+
+    const data = await res.json();
+    alert('Teacher added!');
+    document.getElementById('teacher-id').value = '';
+    document.getElementById('teacher-name').value = '';
+    document.getElementById('teacher-email').value = '';
+    document.getElementById('teacher-phone').value = '';
+    document.getElementById('teacher-password').value = '';
+    loadTeachersDropdown(); // Refresh dropdown if needed
+  } catch (error) {
+    console.error('Error adding teacher:', error);
+    alert('Failed to add teacher. Check the console for details.');
+  }
+}
+
+    // Function to add a student
+    async function addStudent() {
+  const studentId = document.getElementById('student-id').value;
+  const name = document.getElementById('student-name').value;
+  const email = document.getElementById('student-email').value;
+  const phone = document.getElementById('student-phone').value;
+  const password = document.getElementById('student-password').value;
+
+  try {
+    const res = await fetch('http://localhost:5000/add-student', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ studentId, name, email, phone, password }),
+    });
+    if (!res.ok) {
+      throw new Error('Failed to add student');
+    }
+    const data = await res.json();
+    alert('Student added!');
+    document.getElementById('student-id').value = '';
+    document.getElementById('student-name').value = '';
+    document.getElementById('student-email').value = '';
+    document.getElementById('student-phone').value = '';
+    document.getElementById('student-password').value = '';
+    loadStudentsDropdown(); // Refresh dropdown if needed
+  } catch (error) {
+    console.error('Error adding student:', error);
+    alert('Failed to add student. Check the console for details.');
+  }
+}
+
+    // Function to add a course
+    async function addCourse() {
+      const name = document.getElementById('course-name').value;
+      try {
+        const res = await fetch('http://localhost:5000/add-course', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name })
+        });
+        if (!res.ok) {
+          throw new Error('Failed to add course');
+        }
+        const data = await res.json();
+        alert('Course added!');
+        loadCoursesDropdown(); // Refresh dropdown
+      } catch (error) {
+        console.error('Error adding course:', error);
+        alert('Failed to add course. Check the console for details.');
+      }
+    }
+
+    // Function to add a subject
+    async function addSubject() {
+      const name = document.getElementById('subject-name').value;
+      const courseId = document.getElementById('subject-course-dropdown').value;
+      try {
+        const res = await fetch('http://localhost:5000/add-subject', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, courseId })
+        });
+        if (!res.ok) {
+          throw new Error('Failed to add subject');
+        }
+        const data = await res.json();
+        alert('Subject added!');
+        loadSubjectsDropdown(); // Refresh dropdown
+      } catch (error) {
+        console.error('Error adding subject:', error);
+        alert('Failed to add subject. Check the console for details.');
+      }
+    }
+
+    // Function to assign a class
+    async function assignClass() {
+      const className = document.getElementById('class-name').value;
+      const teacherId = document.getElementById('teacher-dropdown').value;
+      const studentIds = Array.from(document.getElementById('students-dropdown').selectedOptions).map(opt => opt.value);
+      const courseId = document.getElementById('assign-course-dropdown').value;
+      const subjectId = document.getElementById('assign-subject-dropdown').value;
+      try {
+        const res = await fetch('http://localhost:5000/assign-class', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ className, teacherId, studentIds, courseId, subjectId })
+        });
+        if (!res.ok) {
+          throw new Error('Failed to assign class');
+        }
+        const data = await res.json();
+        alert('Class assigned!');
+        loadAssignedClasses(); // Refresh assigned classes table
+      } catch (error) {
+        console.error('Error assigning class:', error);
+        alert('Failed to assign class. Check the console for details.');
+      }
+    }
+
+    // Function to load all data in the "View All" tab
+    async function loadAllData() {
+      await loadTeachers();
+      await loadStudents();
+      await loadCourses();
+      await loadSubjects();
+      await loadAssignedClasses();
+    }
+
+    // Function to load teachers in the "View All" tab
+    async function loadTeachers() {
+  const res = await fetch('http://localhost:5000/teachers');
+  const data = await res.json();
+  const tableBody = document.querySelector('#view-all-teachers tbody');
+  tableBody.innerHTML = '';
+  data.forEach(t => {
+    tableBody.innerHTML += `
+      <tr>
+        <td>${t.teacherId}</td>
+        <td>${t.name}</td>
+        <td>${t.email}</td>
+        <td>${t.phone}</td>
+        <td>${t.password}</td>
+        <td>
+          <button class="edit" onclick="editTeacher('${t._id}', this)">Edit</button>
+          <button class="delete" onclick="deleteTeacher('${t._id}')">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+    // Function to load students in the "View All" tab
+   async function loadStudents() {
+  const res = await fetch('http://localhost:5000/students');
+  const data = await res.json();
+  const tableBody = document.querySelector('#view-all-students tbody');
+  tableBody.innerHTML = '';
+  data.forEach(s => {
+    tableBody.innerHTML += `
+      <tr>
+        <td>${s.studentId}</td>
+        <td>${s.name}</td>
+        <td>${s.email}</td>
+        <td>${s.phone}</td>
+        <td>${s.password}</td>
+        <td>
+          <button class="edit" onclick="editStudent('${s._id}', this)">Edit</button>
+          <button class="delete" onclick="deleteStudent('${s._id}')">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+    // Function to load courses in the "View All" tab
+    async function loadCourses() {
+      const res = await fetch('http://localhost:5000/courses');
+      const data = await res.json();
+      const tableBody = document.querySelector('#view-all-courses tbody');
+      tableBody.innerHTML = '';
+      data.forEach(c => {
+        tableBody.innerHTML += `
+          <tr>
+            <td>${c.name}</td>
+            <td>
+              <button class="edit" onclick="editCourse('${c._id}', this)">Edit</button>
+              <button class="delete" onclick="deleteCourse('${c._id}')">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    // Function to load subjects in the "View All" tab
+    async function loadSubjects() {
+      const res = await fetch('http://localhost:5000/subjects');
+      const data = await res.json();
+      const tableBody = document.querySelector('#view-all-subjects tbody');
+      tableBody.innerHTML = '';
+      data.forEach(s => {
+        tableBody.innerHTML += `
+          <tr>
+            <td>${s.name}</td>
+            <td>${s.course ? s.course.name : 'N/A'}</td>
+            <td>
+              <button class="edit" onclick="editSubject('${s._id}', this)">Edit</button>
+              <button class="delete" onclick="deleteSubject('${s._id}')">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    // Function to load assigned classes in the "View All" tab
+    async function loadAssignedClasses() {
+      const res = await fetch('http://localhost:5000/classes');
+      const data = await res.json();
+      const tableBody = document.querySelector('#view-all-classes tbody');
+      tableBody.innerHTML = '';
+      data.forEach(cls => {
+        tableBody.innerHTML += `
+          <tr>
+            <td>${cls.name}</td>
+            <td>${cls.teacher ? cls.teacher.name : 'N/A'}</td>
+            <td>${cls.students ? cls.students.map(s => s.name).join(', ') : 'N/A'}</td>
+            <td>${cls.course ? cls.course.name : 'N/A'}</td>
+            <td>${cls.subject ? cls.subject.name : 'N/A'}</td>
+            <td>
+              <button class="delete" onclick="deleteClass('${cls._id}')">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    // Function to edit a teacher
+    async function editTeacher(id, btn) {
+  const row = btn.closest('tr');
+  const teacherId = row.children[0].textContent;
+  const name = row.children[1].textContent;
+  const email = row.children[2].textContent;
+  const phone = row.children[3].textContent;
+  const password = row.children[4].textContent;
+
+  await fetch(`http://localhost:5000/edit-teacher/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ teacherId, name, email, phone, password })
+  });
+  alert('Teacher updated!');
+  loadTeachers();
+}
+    // Function to delete a teacher
+    async function deleteTeacher(id) {
+      await fetch(`http://localhost:5000/delete-teacher/${id}`, { method: 'DELETE' });
+      alert('Teacher deleted!');
+      loadTeachers();
+    }
+
+    // Function to edit a student
+    async function editStudent(id, btn) {
+  const row = btn.closest('tr');
+  const studentId = row.children[0].textContent;
+  const name = row.children[1].textContent;
+  const email = row.children[2].textContent;
+  const phone = row.children[3].textContent;
+  const password = row.children[4].textContent;
+
+  await fetch(`http://localhost:5000/edit-student/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ studentId, name, email, phone, password }),
+  });
+  alert('Student updated!');
+  loadStudents();
+}
+
+    // Function to delete a student
+    async function deleteStudent(id) {
+      await fetch(`http://localhost:5000/delete-student/${id}`, { method: 'DELETE' });
+      alert('Student deleted!');
+      loadStudents();
+    }
+
+    // Function to edit a course
+    async function editCourse(id, btn) {
+      const row = btn.closest('tr');
+      const name = row.children[0].textContent;
+      await fetch(`http://localhost:5000/edit-course/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+      });
+      alert('Course updated!');
+      loadCourses();
+    }
+
+    // Function to delete a course
+    async function deleteCourse(id) {
+      await fetch(`http://localhost:5000/delete-course/${id}`, { method: 'DELETE' });
+      alert('Course deleted!');
+      loadCourses();
+    }
+
+    // Function to edit a subject
+    async function editSubject(id, btn) {
+      const row = btn.closest('tr');
+      const name = row.children[0].textContent;
+      const courseId = row.children[1].textContent;
+      await fetch(`http://localhost:5000/edit-subject/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, courseId })
+      });
+      alert('Subject updated!');
+      loadSubjects();
+    }
+
+    // Function to delete a subject
+    async function deleteSubject(id) {
+      await fetch(`http://localhost:5000/delete-subject/${id}`, { method: 'DELETE' });
+      alert('Subject deleted!');
+      loadSubjects();
+    }
+
+    // Function to delete a class
+    async function deleteClass(id) {
+      await fetch(`http://localhost:5000/delete-class/${id}`, { method: 'DELETE' });
+      alert('Class deleted!');
+      loadAssignedClasses();
+    }
+
+    // Load dropdowns on page load
+    window.onload = loadDropdowns;
+
+    // Add these new functions
+async function importStudentsFromExcel() {
+    const fileInput = document.getElementById('excel-file');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        alert('Please select an Excel file');
+        return;
+    }
+
+    try {
+        // Read Excel file
+        const data = await readExcelFile(file);
+        
+        // Validate and format the data
+        const students = formatStudentData(data);
+        
+        if (students.length === 0) {
+            alert('No valid student data found in the file');
+            return;
+        }
+
+        // Send to server
+        const res = await fetch('http://localhost:5000/import-students', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ students })
+        });
+
+        if (!res.ok) {
+            throw new Error('Failed to import students');
+        }
+
+        alert(`${students.length} students imported successfully!`);
+        loadStudents(); // Refresh the student list
+        fileInput.value = ''; // Clear file input
+    } catch (error) {
+        console.error('Import error:', error);
+        alert('Error importing students: ' + error.message);
+    }
+}
+
+function readExcelFile(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        
+        reader.onload = (e) => {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+                resolve(jsonData);
+            } catch (err) {
+                reject(err);
+            }
+        };
+        
+        reader.onerror = (error) => reject(error);
+        reader.readAsArrayBuffer(file);
+    });
+}
+
+function formatStudentData(data) {
+    return data.map(row => ({
+        studentId: row['Student ID'] || row['studentId'] || '',
+        name: row['Name'] || row['name'] || '',
+        email: row['Email'] || row['email'] || '',
+        phone: row['Phone'] || row['phone'] || '',
+        password: row['Password'] || row['password'] || 'default123' // Default password if not provided
+    })).filter(student => 
+        student.studentId && student.name && student.email
+    );
+}
+
+// Add this function to the script section
+function downloadSampleExcel() {
+    // Sample data
+    const sampleData = [
+        {
+            "Student ID": "ST001",
+            "Name": "John Doe",
+            "Email": "john@example.com",
+            "Phone": "1234567890",
+            "Password": "password123"
+        },
+        {
+            "Student ID": "ST002",
+            "Name": "Jane Smith",
+            "Email": "jane@example.com",
+            "Phone": "9876543210",
+            "Password": "password456"
+        }
+    ];
+
+    // Create workbook
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(sampleData);
+    XLSX.utils.book_append_sheet(wb, ws, "Students");
+
+    // Generate and download
+    XLSX.writeFile(wb, "students_sample.xlsx");
+}
+
+async function importStudentsFromExcel() {
+    const fileInput = document.getElementById('excel-file');
+    const file = fileInput.files[0];
+    
+    // Basic check if a file is selected
+    if (!file) {
+        alert("🚫 Please select an Excel file first!");
+        return;
+    }
+
+    // Check if it's an .xlsx file (case-insensitive)
+    if (!file.name.toLowerCase().endsWith('.xlsx')) {
+        alert("❌ Only .xlsx files are allowed!\nDownload the sample template for the correct format.");
+        return;
+    }
+
+    // Proceed with import if checks pass
+    try {
+        const data = await readExcelFile(file);
+        const students = formatStudentData(data);
+        
+        if (students.length === 0) {
+            alert("⚠️ No valid data found. Check the file format.");
+            return;
+        }
+
+        const res = await fetch('http://localhost:5000/import-students', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ students })
+        });
+
+        if (!res.ok) throw new Error("Server rejected the file.");
+        
+        alert(`✅ Success! ${students.length} students imported.`);
+        fileInput.value = ""; // Clear the input
+        loadStudents(); // Refresh the list
+    } catch (error) {
+        alert(`❌ Import failed: ${error.message}`);
+        console.error("Import error:", error);
+    }
+}
+  </script>
+</body>
+</html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Subject Marks - EDVANTAGE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .main-content {
+      padding: 40px;
+      margin-left: 50px;
+      transition: margin-left 0.3s ease-in-out;
+    }
+    .sidebar.active + .main-content {
+      margin-left: 250px;
+    }
+    h1 {
+      font-size: 28px;
+      color: #2c3e50;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .input-section {
+      margin-bottom: 20px;
+      max-width: 600px;
+    }
+    .input-section label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: #2c3e50;
+    }
+    .input-section select,
+    .input-section input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+      background: #f9f9f9;
+      transition: border-color 0.3s ease;
+    }
+    .input-section select:focus,
+    .input-section input:focus {
+      border-color: #3498db;
+      outline: none;
+    }
+    .btn {
+      padding: 10px 20px;
+      background-color: #2c3e50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 10px;
+    }
+    .btn:hover {
+      background-color: #34495e;
+    }
+    .marks-table {
+      width: 100%;
+      max-width: 800px;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .marks-table th,
+    .marks-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    .marks-table th {
+      background-color: #2c3e50;
+      color: white;
+    }
+    .marks-table td {
+      background-color: #f9f9f9;
+    }
+    .marks-table input {
+      width: 80px;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .top-logout-btn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    .subject-info {
+      background: #f5f7fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      max-width: 600px;
+    }
+    .subject-info p {
+      margin: 5px 0;
+      font-size: 16px;
+    }
+    .subject-info strong {
+      display: inline-block;
+      width: 150px;
+    }
+  </style>
+</head>
+<body>
+  <button class="top-logout-btn" onclick="logout()">Logout</button>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <h2>EDVANTAGE</h2>
+    <ul>
+      <li><a href="index.html">🏠 Dashboard</a></li>
+      <li><a href="resources.html">📁 Resources Upload</a></li>
+      <li><a href="attendance.html">✅ Attendance Update</a></li>
+      <li><a href="performance.html" class="active">📊 Student Marks</a></li>
+      <li><a href="events.html">📅 Event Notifications</a></li>
+      <li><a href="leave-approval.html">📝 Leave Approval</a></li>
+      <li><a href="daily-planner.html">📋 Daily Planner</a></li>
+    </ul>
+  </div>
+
+  <!-- Hamburger Menu -->
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h1>Subject Marks Management</h1>
+
+    <!-- Subject Information -->
+    <div class="subject-info">
+      <p><strong>Teacher:</strong> <span id="teacherName">Loading...</span></p>
+      <p><strong>Subject:</strong> <span id="subjectName">Computer Science</span></p>
+      <p><strong>Class:</strong> <span id="className">Class 12-A</span></p>
+    </div>
+
+    <!-- Student Selection -->
+    <div class="input-section">
+      <label for="studentDropdown">Select Student:</label>
+      <select id="studentDropdown" onchange="loadStudentMarks()">
+        <option value="">-- Select a Student --</option>
+      </select>
+    </div>
+
+    <!-- Marks Entry Form -->
+    <div class="input-section">
+      <h3>Enter Marks</h3>
+      <label for="firstInternal">1st Internal Marks (Max 20):</label>
+      <input type="number" id="firstInternal" min="0" max="20" />
+      <label for="secondInternal">2nd Internal Marks (Max 20):</label>
+      <input type="number" id="secondInternal" min="0" max="20" />
+      <label for="thirdInternal">3rd Internal Marks (Max 20):</label>
+      <input type="number" id="thirdInternal" min="0" max="20" />
+      <label for="externalMarks">External Marks (Max 50):</label>
+      <input type="number" id="externalMarks" min="0" max="50" />
+      <label for="assignmentMarks">Assignment Marks (Max 10):</label>
+      <input type="number" id="assignmentMarks" min="0" max="10" />
+      <label for="labInternal">Lab Internal Marks (Max 20):</label>
+      <input type="number" id="labInternal" min="0" max="20" />
+      <label for="labExternal">Lab External Marks (Max 30):</label>
+      <input type="number" id="labExternal" min="0" max="30" />
+      <button class="btn" onclick="updateMarks()">Save Marks</button>
+    </div>
+
+    <!-- Marks Summary Table -->
+    <table class="marks-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Marks Obtained</th>
+          <th>Max Marks</th>
+          <th>Percentage</th>
+        </tr>
+      </thead>
+      <tbody id="marksTableBody">
+        <tr>
+          <td>1st Internal</td>
+          <td id="firstInternalDisplay">-</td>
+          <td>20</td>
+          <td id="firstInternalPercent">-</td>
+        </tr>
+        <tr>
+          <td>2nd Internal</td>
+          <td id="secondInternalDisplay">-</td>
+          <td>20</td>
+          <td id="secondInternalPercent">-</td>
+        </tr>
+        <tr>
+          <td>3rd Internal</td>
+          <td id="thirdInternalDisplay">-</td>
+          <td>20</td>
+          <td id="thirdInternalPercent">-</td>
+        </tr>
+        <tr>
+          <td>External</td>
+          <td id="externalMarksDisplay">-</td>
+          <td>50</td>
+          <td id="externalMarksPercent">-</td>
+        </tr>
+        <tr>
+          <td>Assignment</td>
+          <td id="assignmentMarksDisplay">-</td>
+          <td>10</td>
+          <td id="assignmentMarksPercent">-</td>
+        </tr>
+        <tr>
+          <td>Lab Internal</td>
+          <td id="labInternalDisplay">-</td>
+          <td>20</td>
+          <td id="labInternalPercent">-</td>
+        </tr>
+        <tr>
+          <td>Lab External</td>
+          <td id="labExternalDisplay">-</td>
+          <td>30</td>
+          <td id="labExternalPercent">-</td>
+        </tr>
+        <tr>
+          <td><strong>Total</strong></td>
+          <td id="totalMarksDisplay"><strong>-</strong></td>
+          <td><strong>150</strong></td>
+          <td id="totalPercentDisplay"><strong>-</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // Toggle Sidebar
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("active");
+    }
+
+    // Mock teacher information load; replace with an API call if needed
+    function loadTeacherInfo() {
+      const teacherId = localStorage.getItem('teacherId');
+      if (!teacherId) {
+        alert('Please log in first.');
+        window.location.href = 'edvantage_login.html';
+        return;
+      }
+      // Set teacher info; these could come from your backend
+      document.getElementById('teacherName').textContent = "Dr. Smith";
+      // Subject and class can be dynamically loaded as required. Here they're fixed.
+      document.getElementById('subjectName').textContent = "Computer Science";
+      document.getElementById('className').textContent = "Class 12-A";
+    }
+
+    // Fetch students and fill dropdown – note that we use student._id
+    async function fetchStudents() {
+      try {
+        const response = await fetch('http://localhost:5000/students');
+        const students = await response.json();
+        const dropdown = document.getElementById('studentDropdown');
+        dropdown.innerHTML = '<option value="">-- Select a Student --</option>';
+        students.forEach(student => {
+          const option = document.createElement('option');
+          option.value = student._id; // Using _id ensures a valid ObjectId
+          option.textContent = student.name;
+          dropdown.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error fetching students:', error);
+      }
+    }
+
+    // Load marks for a selected student and subject
+    async function loadStudentMarks() {
+      const studentId = document.getElementById('studentDropdown').value;
+      const subject = document.getElementById('subjectName').textContent;
+      if (!studentId || !subject) return;
+      try {
+        const response = await fetch(`http://localhost:5000/performance/${studentId}/${subject}`);
+        const marksData = await response.json();
+        // If no marks data, clear form and table
+        if (!marksData || !marksData.marks) {
+          updateSummaryTable({});
+          return;
+        }
+        const { marks } = marksData;
+        document.getElementById('firstInternal').value = marks.firstInternal || '';
+        document.getElementById('secondInternal').value = marks.secondInternal || '';
+        document.getElementById('thirdInternal').value = marks.thirdInternal || '';
+        document.getElementById('externalMarks').value = marks.externalMarks || '';
+        document.getElementById('assignmentMarks').value = marks.assignmentMarks || '';
+        document.getElementById('labInternal').value = marks.labInternal || '';
+        document.getElementById('labExternal').value = marks.labExternal || '';
+        updateSummaryTable(marks);
+      } catch (error) {
+        console.error('Error loading student marks:', error);
+        alert('Failed to load student marks.');
+      }
+    }
+
+    // Update the summary table with calculated percentages
+    function updateSummaryTable(marks) {
+      document.getElementById('firstInternalDisplay').textContent = marks.firstInternal || '-';
+      document.getElementById('secondInternalDisplay').textContent = marks.secondInternal || '-';
+      document.getElementById('thirdInternalDisplay').textContent = marks.thirdInternal || '-';
+      document.getElementById('externalMarksDisplay').textContent = marks.externalMarks || '-';
+      document.getElementById('assignmentMarksDisplay').textContent = marks.assignmentMarks || '-';
+      document.getElementById('labInternalDisplay').textContent = marks.labInternal || '-';
+      document.getElementById('labExternalDisplay').textContent = marks.labExternal || '-';
+
+      if (marks.firstInternal != null) {
+        document.getElementById('firstInternalPercent').textContent = Math.round((marks.firstInternal / 20) * 100) + '%';
+      }
+      if (marks.secondInternal != null) {
+        document.getElementById('secondInternalPercent').textContent = Math.round((marks.secondInternal / 20) * 100) + '%';
+      }
+      if (marks.thirdInternal != null) {
+        document.getElementById('thirdInternalPercent').textContent = Math.round((marks.thirdInternal / 20) * 100) + '%';
+      }
+      if (marks.externalMarks != null) {
+        document.getElementById('externalMarksPercent').textContent = Math.round((marks.externalMarks / 50) * 100) + '%';
+      }
+      if (marks.assignmentMarks != null) {
+        document.getElementById('assignmentMarksPercent').textContent = Math.round((marks.assignmentMarks / 10) * 100) + '%';
+      }
+      if (marks.labInternal != null) {
+        document.getElementById('labInternalPercent').textContent = Math.round((marks.labInternal / 20) * 100) + '%';
+      }
+      if (marks.labExternal != null) {
+        document.getElementById('labExternalPercent').textContent = Math.round((marks.labExternal / 30) * 100) + '%';
+      }
+
+      const total = 
+        (parseInt(marks.firstInternal) || 0) +
+        (parseInt(marks.secondInternal) || 0) +
+        (parseInt(marks.thirdInternal) || 0) +
+        (parseInt(marks.externalMarks) || 0) +
+        (parseInt(marks.assignmentMarks) || 0) +
+        (parseInt(marks.labInternal) || 0) +
+        (parseInt(marks.labExternal) || 0);
+      document.getElementById('totalMarksDisplay').innerHTML = `<strong>${total}</strong>`;
+      document.getElementById('totalPercentDisplay').innerHTML = `<strong>${Math.round((total / 150) * 100)}%</strong>`;
+    }
+
+    // Save or update marks for a student and subject
+    async function updateMarks() {
+      const studentId = document.getElementById('studentDropdown').value;
+      const subject = document.getElementById('subjectName').textContent;
+      if (!studentId || !subject) {
+        alert('Please select a student and ensure subject is loaded.');
+        return;
+      }
+      
+      // Prepare marks object from form inputs
+      const marks = {
+        firstInternal: parseInt(document.getElementById('firstInternal').value) || 0,
+        secondInternal: parseInt(document.getElementById('secondInternal').value) || 0,
+        thirdInternal: parseInt(document.getElementById('thirdInternal').value) || 0,
+        externalMarks: parseInt(document.getElementById('externalMarks').value) || 0,
+        assignmentMarks: parseInt(document.getElementById('assignmentMarks').value) || 0,
+        labInternal: parseInt(document.getElementById('labInternal').value) || 0,
+        labExternal: parseInt(document.getElementById('labExternal').value) || 0,
+      };
+
+      console.log("Sending studentId:", studentId); // Debugging
+      
+      try {
+        const response = await fetch('http://localhost:5000/performance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ studentId, subject, marks })
+        });
+        const result = await response.json();
+        alert(result.message || 'Marks updated successfully!');
+        loadStudentMarks(); // refresh the marks view
+      } catch (error) {
+        console.error('Error updating marks:', error);
+        alert('Failed to update marks.');
+      }
+    }
+
+    // On document ready
+    document.addEventListener('DOMContentLoaded', () => {
+      loadTeacherInfo();
+      fetchStudents();
+    });
+
+    function logout() {
+      localStorage.removeItem('teacherId');
+      window.location.href = 'edvantage_login.html';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDVANTAGE - Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Only adding minimal CSS for the logout button */
+        .logout-btn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        
+    </style>
+</head>
+<body>
+
+    <!-- Only new element - logout button -->
+    <button class="logout-btn" onclick="logout()">Logout</button>
+
+    <!-- Existing Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <h2>EDVANTAGE</h2>
+        <ul>
+            <li><a href="index.html">🏠 Dashboard</a></li>
+            <li><a href="resources.html">📁 Resources Upload</a></li>
+            <li><a href="attendance.html">✅ Attendance Update</a></li>
+            <li><a href="performance.html">📊 Student Performance</a></li>
+            <li><a href="events.html">📅 Event Notifications</a></li>
+            <li><a href="leave-approval.html">📝 Leave Approval</a></li>
+            <li><a href="daily-planner.html">📋 Daily Planner</a></li>
+            <li><a href="edvantage_login.html" onclick="logout()">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Existing Hamburger Menu -->
+    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+
+    <!-- Existing Main Content -->
+    <div class="main-content">
+        <h1>Welcome, <span id="teacher-name">Loading...</span>!</h1>
+        <p>Select an option from the sidebar to proceed.</p>
+        
+        <div id="loading" class="loading">Loading...</div>
+        
+        <div class="stats-container">
+            <div class="stat-card">📚 Total Courses: <span id="total-courses">0</span></div>
+            <div class="stat-card">👨‍🎓 Total Students: <span id="total-students">0</span></div>
+            <div class="stat-card">📆 Upcoming Events: <span id="upcoming-events">0</span></div>
+            <div class="stat-card">📌 Pending Leaves: <span id="pending-leaves">0</span></div>
+        </div>
+    </div>
+    
+    <script>
+        // Only adding the logout function
+        function logout() {
+            localStorage.removeItem('teacherId');
+            localStorage.removeItem('teacherName');
+            window.location.href = "edvantage_login.html";
+        }
+
+        // Existing toggleSidebar function
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("active");
+            document.querySelector(".main-content").classList.toggle("sidebar-collapsed");
+        }
+    
+        // Existing fetchTeacherData function
+        async function fetchTeacherData() {
+            try {
+                document.getElementById("loading").style.display = "block";
+                
+                const teacherName = localStorage.getItem('teacherName');
+                const teacherId = localStorage.getItem('teacherId');
+                
+                if (!teacherId) {
+                    window.location.href = "edvantage_login.html";
+                    return;
+                }
+    
+                if (teacherName) {
+                    document.getElementById("teacher-name").textContent = teacherName;
+                }
+    
+                const response = await fetch(`http://localhost:5000/api/dashboard/${teacherId}`);
+                if (!response.ok) throw new Error('Failed to load dashboard data');
+                
+                const { data } = await response.json();
+                
+                document.getElementById("total-courses").textContent = data.totalCourses;
+                document.getElementById("total-students").textContent = data.totalStudents;
+                document.getElementById("upcoming-events").textContent = data.upcomingEvents;
+                document.getElementById("pending-leaves").textContent = data.pendingLeaves;
+    
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Error loading dashboard. Showing cached data.");
+            } finally {
+                document.getElementById("loading").style.display = "none";
+            }
+        }
+    
+        // Existing window.onload
+        window.onload = function() {
+            const teacherName = localStorage.getItem('teacherName');
+            if (teacherName) {
+                document.getElementById("teacher-name").textContent = teacherName;
+            }
+            fetchTeacherData();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Update - EDVANTAGE</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .main-content {
+            padding: 40px;
+            margin-left: 50px;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .sidebar.active + .main-content {
+            margin-left: 250px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* Attendance Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #2c3e50;
+            color: white;
+        }
+
+        td {
+            background: #f9f9f9;
+        }
+
+        tr:hover td {
+            background: #e9e9e9;
+        }
+
+        /* Attendance Buttons Styling */
+        .attendance-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .attendance-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .present-btn {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .present-btn.active {
+            transform: scale(1.1);
+            box-shadow: 0 0 5px rgba(46, 204, 113, 0.8);
+        }
+
+        .absent-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .absent-btn.active {
+            transform: scale(1.1);
+            box-shadow: 0 0 5px rgba(231, 76, 60, 0.8);
+        }
+
+        /* Percentage Styling */
+        .attendance-percentage {
+            font-weight: bold;
+            min-width: 80px;
+            display: inline-block;
+            text-align: center;
+            border-radius: 15px;
+            padding: 3px 10px;
+        }
+
+        .high-attendance {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+
+        .medium-attendance {
+            background-color: rgba(241, 196, 15, 0.2);
+            color: #f39c12;
+        }
+
+        .low-attendance {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+
+        /* Action Buttons */
+        .action-btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #34495e;
+        }
+
+        .btn-download {
+            background-color: #3498db;
+        }
+
+        .btn-download:hover {
+            background-color: #2980b9;
+        }
+
+        #confirmationMessage {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .top-logout-btn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        /* Bulk Actions */
+        .bulk-actions {
+            margin: 15px 0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .bulk-actions select, .bulk-actions button {
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+
+        /* Checkbox styling */
+        .student-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* Export Options */
+        .export-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .export-btn {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .export-btn:hover {
+            background-color: #219653;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+            .action-btns, .bulk-actions {
+                flex-direction: column;
+            }
+            .attendance-btns {
+                gap: 5px;
+            }
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .retry-icon {
+            margin-right: 5px;
+        }
+
+        .date-time-selection {
+    margin: 20px 0;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.date-time-selection label {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.date-time-selection input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: 'Poppins', sans-serif;
+}
+ 
+    </style>
+</head>
+<body>
+    <button class="top-logout-btn" onclick="logout()">Logout</button>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <h2>EDVANTAGE</h2>
+        <ul>
+            <li><a href="index.html">🏠 Dashboard</a></li>
+            <li><a href="resources.html">📁 Resources Upload</a></li>
+            <li><a href="attendance.html">✅ Attendance Update</a></li>
+            <li><a href="performance.html">📊 Student Performance</a></li>
+            <li><a href="events.html">📅 Event Notifications</a></li>
+            <li><a href="leave-approval.html">📝 Leave Approval</a></li>
+            <li><a href="daily-planner.html">📋 Daily Planner</a></li>
+        </ul>
+    </div>
+
+    <!-- Hamburger Menu -->
+    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>Attendance Update</h1>
+
+        <div class="date-time-selection">
+            <label for="attendanceDate">Date:</label>
+            <input type="date" id="attendanceDate" value="">
+            
+            <label for="attendanceTime">Time:</label>
+            <input type="time" id="attendanceTime" value="">
+        </div>
+
+
+        <!-- Bulk Actions -->
+        <div class="bulk-actions">
+            <select id="bulkAction">
+                <option value="">Bulk Actions</option>
+                <option value="mark-present">Mark Selected as Present</option>
+                <option value="mark-absent">Mark Selected as Absent</option>
+            </select>
+            <button class="btn" onclick="applyBulkAction()">Apply</button>
+            <input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)">
+            <label for="selectAll">Select All</label>
+        </div>
+
+        <!-- Attendance Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Student Name</th>
+                    <th>Roll Number</th>
+                    <th>Attendance</th>
+                    <th>Attendance %</th>
+                </tr>
+            </thead>
+            <tbody id="attendanceTable">
+                <!-- Rows will be added dynamically here -->
+            </tbody>
+        </table>
+
+        <!-- Action Buttons -->
+        <div class="action-btns">
+            <button class="btn" onclick="submitAttendance()">Save Attendance</button>
+        </div>
+
+        <!-- Export Options -->
+        <div class="export-options">
+            <button class="btn export-btn" onclick="exportAsPDF()">Export as PDF</button>
+            <button class="btn export-btn" onclick="exportAsExcel()">Export as Excel</button>
+        </div>
+
+        <p id="confirmationMessage"></p>
+    </div>
+
+    <script>
+        // Toggle Sidebar
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("active");
+        }
+    
+        function logout() {
+            localStorage.removeItem('teacherId');
+            window.location.href = "login.html";
+        }
+    
+        // Global variable to store classes
+        let classes = [];
+    
+        // Fetch all classes from backend
+        async function loadClasses() {
+            try {
+                const response = await fetch('http://localhost:5000/classes');
+                if (!response.ok) throw new Error('Failed to load classes');
+                classes = await response.json();
+                
+                const select = document.getElementById('classSelect');
+                classes.forEach(cls => {
+                    const option = document.createElement('option');
+                    option.value = cls._id;
+                    option.textContent = `${cls.name} (${cls.subject?.name || 'No Subject'})`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading classes:', error);
+                showError("Failed to load classes. Please refresh the page.");
+            }
+        }
+    
+        // Fetch students with attendance data
+        async function loadClassAttendance() {
+    const table = document.getElementById('attendanceTable');
+    
+    table.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px"><div class="loading-spinner"></div> Loading students...</td></tr>';
+
+    try {
+        const response = await fetch('http://localhost:5000/students-with-attendance');
+        const students = await response.json();
+
+        if (!Array.isArray(students)) {
+            throw new Error("Unexpected data format from server");
+        }
+
+        renderStudents(students);
+
+    } catch (error) {
+        console.error('Fetch Error:', error);
+        showError("Failed to load students. " + (error.message || ""));
+    }
+}
+
+    
+        function renderStudents(students) {
+            const table = document.getElementById('attendanceTable');
+            
+            if (!students || students.length === 0) {
+                table.innerHTML = '<tr><td colspan="5" style="text-align:center">No students found</td></tr>';
+                return;
+            }
+            
+            table.innerHTML = '';
+            
+            students.forEach(student => {
+                const row = document.createElement('tr');
+                row.dataset.studentId = student.id || student._id || 'unknown';
+                
+                // Handle missing data with defaults
+                const status = student.attendanceStatus || 'present';
+                const attendancePercentage = student.attendancePercentage || 0;
+                const rollNumber = student.rollNumber || 'N/A';
+                const name = student.name || 'Unknown Student';
+                
+                let percentageClass = getPercentageClass(attendancePercentage);
+                
+                row.innerHTML = `
+                    <td><input type="checkbox" class="student-checkbox"></td>
+                    <td>${name}</td>
+                    <td>${rollNumber}</td>
+                    <td>
+                        <div class="attendance-btns">
+                            <button class="attendance-btn present-btn ${status === 'present' ? 'active' : ''}" 
+                                onclick="setAttendance(this, 'present')">✓</button>
+                            <button class="attendance-btn absent-btn ${status === 'absent' ? 'active' : ''}" 
+                                onclick="setAttendance(this, 'absent')">✗</button>
+                        </div>
+                    </td>
+                    <td><span class="attendance-percentage ${percentageClass}">${attendancePercentage}%</span></td>
+                `;
+                
+                table.appendChild(row);
+            });
+        }
+    
+        function getPercentageClass(percentage) {
+            if (percentage >= 75) return 'high-attendance';
+            if (percentage >= 50) return 'medium-attendance';
+            return 'low-attendance';
+        }
+    
+        // Update the setAttendance function
+function setAttendance(button, status) {
+    const btnContainer = button.parentElement;
+    const presentBtn = btnContainer.querySelector('.present-btn');
+    const absentBtn = btnContainer.querySelector('.absent-btn');
+
+    // Update active state
+    presentBtn.classList.toggle('active', status === 'present');
+    absentBtn.classList.toggle('active', status === 'absent');
+}
+    
+        // Bulk action functions
+        function toggleSelectAll(checkbox) {
+            document.querySelectorAll('.student-checkbox').forEach(cb => {
+                cb.checked = checkbox.checked;
+            });
+        }
+    
+        async function applyBulkAction() {
+    const action = document.getElementById('bulkAction').value;
+    if (!action) return;
+
+    const selectedRows = Array.from(document.querySelectorAll('.student-checkbox:checked'))
+        .map(checkbox => checkbox.closest('tr'));
+
+    if (selectedRows.length === 0) {
+        alert('Please select at least one student');
+        return;
+    }
+
+    try {
+        const updates = selectedRows.map(row => {
+            const studentId = row.dataset.studentId;
+            const studentName = row.cells[1].innerText;
+            const rollNumber = row.cells[2].innerText;
+            const status = action === 'mark-present' ? 'present' : 'absent';
+
+            // Update UI immediately
+            const btnContainer = row.querySelector('.attendance-btns');
+            btnContainer.querySelector('.present-btn').classList.toggle('active', status === 'present');
+            btnContainer.querySelector('.absent-btn').classList.toggle('active', status === 'absent');
+
+            return { studentId, studentName, rollNumber, status };
+        });
+
+        // Send to bulk attendance endpoint
+        const response = await fetch('http://localhost:5000/attendance-bulk', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updates)
+        });
+
+        const result = await response.json();
+
+        // Update percentage in UI
+        result.updates.forEach(update => {
+            const row = document.querySelector(`tr[data-student-id="${update.studentId}"]`);
+            if (row) {
+                const percentageCell = row.cells[4];
+                const percentage = update.percentage || 0;
+                percentageCell.innerHTML = `<span class="attendance-percentage ${getPercentageClass(percentage)}">${percentage}%</span>`;
+            }
+        });
+
+        showMessage(`Bulk ${action.replace('mark-', '')} completed for ${selectedRows.length} students`, 3000);
+
+    } catch (error) {
+        console.error('Bulk action failed:', error);
+        showError('Failed to complete bulk action');
+    }
+}
+
+
+    
+        // Function to submit attendance
+        // Update the submitAttendance function
+async function submitAttendance() {
+    const dateInput = document.getElementById('attendanceDate');
+    const timeInput = document.getElementById('attendanceTime');
+    const attendanceDate = dateInput.value;
+    const attendanceTime = timeInput.value;
+
+    if (!attendanceDate) {
+        showError('Please select a date');
+        return;
+    }
+
+    const rows = document.querySelectorAll('#attendanceTable tr[data-student-id]');
+    
+    if (rows.length === 0) {
+        showMessage('No students to update', 3000);
+        return;
+    }
+
+    try {
+        showMessage('<div class="loading-spinner"></div> Updating attendance...', 0);
+        
+        const updates = Array.from(rows).map(async (row) => {
+            const studentId = row.dataset.studentId;
+            const studentName = row.cells[1].innerText;
+            const rollNumber = row.cells[2].innerText;
+            const status = row.querySelector('.present-btn').classList.contains('active') ? 'present' : 'absent';
+            
+            // Combine date and time
+            const dateTime = attendanceTime ? 
+                `${attendanceDate}T${attendanceTime}` : 
+                attendanceDate;
+
+            const response = await fetch('http://localhost:5000/attendance', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    studentId, 
+                    studentName, 
+                    rollNumber, 
+                    status,
+                    date: dateTime,
+                    time: attendanceTime || '00:00'
+                })
+            });
+
+            if (!response.ok) {
+                const error = await response.json().catch(() => null);
+                throw new Error(error?.message || 'Failed to update attendance');
+            }
+            return await response.json();
+        });
+
+        const results = await Promise.allSettled(updates);
+        
+        // Update percentages in the table
+        results.forEach((result, index) => {
+            if (result.status === 'fulfilled') {
+                const row = rows[index];
+                const percentageCell = row.cells[4];
+                const percentage = result.value.attendancePercentage || result.value.data?.percentage || 0;
+                percentageCell.innerHTML = `<span class="attendance-percentage ${getPercentageClass(percentage)}">${percentage}%</span>`;
+            }
+        });
+
+        showMessage('Attendance updated successfully!', 3000);
+        
+    } catch (error) {
+        console.error('Error:', error);
+        showError(error.message);
+    }
+}
+
+// Set default date to today
+document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('attendanceDate').value = today;
+    loadClassAttendance();
+});
+    
+        // Export functions
+        function exportAsPDF() {
+    window.open('http://localhost:5000/download-attendance', '_blank');
+}
+
+
+    
+function exportAsExcel() {
+    window.open('http://localhost:5000/attendance/export/excel', '_blank');
+}
+
+
+    
+        // Helper functions
+        function showMessage(message, duration) {
+            const elem = document.getElementById('confirmationMessage');
+            elem.innerHTML = message;
+            if (duration > 0) {
+                setTimeout(() => elem.innerHTML = '', duration);
+            }
+        }
+    
+        function showError(message) {
+            const elem = document.getElementById('confirmationMessage');
+            elem.innerHTML = `<span style="color: #e74c3c;">${message}</span>`;
+            setTimeout(() => elem.innerHTML = '', 5000);
+        }
+    
+        document.addEventListener('DOMContentLoaded', function() {
+    loadClassAttendance();
+});
+    </script>
+</body>
+</html>

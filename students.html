@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Portal - EDVANTAGE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3498db;
+      --secondary: #2c3e50;
+      --accent: #e74c3c;
+      --light: #ecf0f1;
+      --dark: #2c3e50;
+      --success: #2ecc71;
+      --warning: #f39c12;
+      --danger: #e74c3c;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f7fa;
+      color: var(--dark);
+    }
+    
+    .sidebar {
+      width: 250px;
+      height: 100vh;
+      background-color: var(--secondary);
+      color: white;
+      position: fixed;
+      top: 0;
+      left: -250px;
+      transition: left 0.3s;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+    
+    .sidebar.active {
+      left: 0;
+    }
+    
+    .sidebar-header {
+      padding: 20px;
+      background-color: rgba(0,0,0,0.1);
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .sidebar ul li a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      padding: 15px 20px;
+      transition: all 0.3s;
+      border-left: 4px solid transparent;
+    }
+    
+    .sidebar ul li a:hover {
+      background-color: rgba(255,255,255,0.1);
+      border-left: 4px solid var(--primary);
+    }
+    
+    .sidebar ul li a.active {
+      background-color: rgba(255,255,255,0.1);
+      border-left: 4px solid var(--primary);
+    }
+    
+    .sidebar ul li a i {
+      margin-right: 10px;
+    }
+    
+    .hamburger {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1000;
+      color: var(--secondary);
+      background: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    .content {
+      margin-left: 0;
+      padding: 20px;
+      transition: margin-left 0.3s;
+      min-height: 100vh;
+    }
+    
+    .content.active {
+      margin-left: 250px;
+    }
+    
+    .header {
+      background-color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: var(--secondary);
+    }
+    
+    .logout-btn {
+      background-color: var(--danger);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    
+    .logout-btn:hover {
+      background-color: #c0392b;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    
+    th {
+      background-color: var(--secondary);
+      color: white;
+      font-weight: 500;
+    }
+    
+    tr:hover td {
+      background-color: #f9f9f9;
+    }
+    
+    .section {
+      display: none;
+    }
+    
+    .section.active {
+      display: block;
+      animation: fadeIn 0.5s;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .profile-info {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .profile-info p {
+      margin: 15px 0;
+      font-size: 16px;
+    }
+    
+    .profile-info strong {
+      display: inline-block;
+      width: 120px;
+      color: var(--secondary);
+    }
+    
+    .attendance-percentage {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 500;
+      font-size: 14px;
+    }
+    
+    .high {
+      background-color: rgba(46, 204, 113, 0.2);
+      color: #27ae60;
+    }
+    
+    .medium {
+      background-color: rgba(241, 196, 15, 0.2);
+      color: #f39c12;
+    }
+    
+    .low {
+      background-color: rgba(231, 76, 60, 0.2);
+      color: #c0392b;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #2980b9;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top: 4px solid var(--primary);
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    @media (max-width: 768px) {
+      .content.active {
+        margin-left: 0;
+      }
+      
+      .sidebar.active {
+        width: 100%;
+        z-index: 999;
+      }
+    }
+
+    /* Add to your existing CSS */
+.attendance-summary {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.summary-card {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  flex: 1;
+  min-width: 150px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.summary-card h3 {
+  margin-top: 0;
+  font-size: 16px;
+  color: var(--secondary);
+}
+
+.summary-card .percentage {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.summary-card .count {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  color: var(--dark);
+}
+
+.attendance-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.attendance-filters select {
+  flex: 1;
+}
+
+.status-present {
+  color: var(--success);
+  font-weight: bold;
+}
+
+.status-absent {
+  color: var(--danger);
+  font-weight: bold;
+}
+
+/* Loading states */
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top: 4px solid var(--primary);
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 10px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.help-text {
+    margin-top: 15px;
+    font-size: 14px;
+    text-align: left;
+    max-width: 400px;
+    margin: 15px auto 0;
+}
+
+.help-text ul {
+    padding-left: 20px;
+}
+
+.btn i {
+    margin-right: 8px;
+}
+
+.message {
+    background: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.message h3 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.message p {
+    margin-bottom: 5px;
+}
+
+.message hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 10px 0;
+}
+
+/* Performance Section Styles */
+.performance-summary {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.chart-container {
+  max-width: 500px;
+  margin: 20px auto;
+  position: relative;
+}
+
+.summary-card .subject {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  color: var(--primary);
+}
+
+.grade-A { color: var(--success); }
+.grade-B { color: #2ecc71; }
+.grade-C { color: #f39c12; }
+.grade-D { color: #e67e22; }
+.grade-F { color: var(--danger); }
+
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Hamburger Menu -->
+  <div class="hamburger" onclick="toggleSidebar()">&#9776;</div>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      EDVANTAGE
+    </div>
+    <ul>
+      <li><a href="#" onclick="loadSection('profile')" class="active"><i class="fas fa-user"></i> Profile</a></li>
+      <li><a href="#" onclick="loadSection('classes')"><i class="fas fa-users"></i> My Classes</a></li>
+      <li><a href="#" onclick="loadSection('teachers')"><i class="fas fa-chalkboard-teacher"></i> My Teachers</a></li>
+      <li><a href="#" onclick="loadSection('attendance')"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+      <li><a href="#" onclick="loadSection('messages')"><i class="fas fa-envelope"></i> Messages</a></li>
+      <li><a href="#" onclick="loadSection('leave')"><i class="fas fa-calendar-times"></i> Request Leave</a></li>
+      <li><a href="#" onclick="loadSection('performance')"><i class="fas fa-chart-line"></i> Performance</a></li>
+    </ul>
+  </div>
+
+  <!-- Content -->
+  <div class="content" id="content">
+    <!-- Header -->
+    <div class="header">
+      <h1 id="section-title">Profile</h1>
+      <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+
+    <!-- Profile Section -->
+    <div id="profile" class="section active">
+      <div class="card">
+        <div class="profile-info">
+          <h2>Student Profile</h2>
+          <p><strong>Student ID:</strong> <span id="profile-student-id">Loading...</span></p>
+          <p><strong>Name:</strong> <span id="profile-name">Loading...</span></p>
+          <p><strong>Email:</strong> <span id="profile-email">Loading...</span></p>
+          <p><strong>Phone:</strong> <span id="profile-phone">Loading...</span></p>
+          <p><strong>Password:</strong> <span id="profile-password">Loading...</span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Classes Section -->
+    <div id="classes" class="section">
+      <div class="card">
+        <h2>My Classes</h2>
+        <div id="classes-loading" class="loading">
+          <div class="spinner"></div>
+          <p>Loading classes...</p>
+        </div>
+        <table id="classes-table" style="display: none;">
+          <thead>
+            <tr>
+              <th>Class Name</th>
+              <th>Teacher</th>
+              <th>Course</th>
+              <th>Subject</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- My Teachers Section -->
+    <div id="teachers" class="section">
+      <div class="card">
+        <h2>My Teachers</h2>
+        <div id="teachers-loading" class="loading">
+          <div class="spinner"></div>
+          <p>Loading teachers...</p>
+        </div>
+        <table id="teachers-table" style="display: none;">
+          <thead>
+            <tr>
+              <th>Teacher Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+   <!-- Attendance Section -->
+<div id="attendance" class="section">
+  <div class="card">
+    <h2>Attendance</h2>
+    <div class="attendance-summary">
+      <div class="summary-card high">
+        <h3>Overall Attendance</h3>
+        <div class="percentage" id="overall-attendance">0%</div>
+      </div>
+      <div class="summary-card">
+        <h3>Present</h3>
+        <div class="count" id="present-count">0</div>
+      </div>
+      <div class="summary-card">
+        <h3>Absent</h3>
+        <div class="count" id="absent-count">0</div>
+      </div>
+    </div>
+    
+    <div class="attendance-filters">
+      <select id="attendance-class-filter" class="form-control">
+        <option value="">All Classes</option>
+      </select>
+      <select id="attendance-month-filter" class="form-control">
+        <option value="">All Months</option>
+        <option value="0">January</option>
+        <option value="1">February</option>
+        <!-- Add all months -->
+      </select>
+    </div>
+    
+    <div id="attendance-loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading attendance...</p>
+    </div>
+    
+    <table id="attendance-table" style="display: none;">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Class</th>
+          <th>Status</th>
+          <th>Teacher</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+    <!-- Messages Section -->
+    <div id="messages" class="section">
+      <div class="card">
+        <h2>Messages</h2>
+        <div id="messages-container"></div>
+      </div>
+    </div>
+
+    <!-- Request Leave Section -->
+    <div id="leave" class="section">
+      <div class="card">
+        <h2>Request Leave</h2>
+        <form id="leave-form">
+          <div class="form-group">
+            <label for="leave-date">Date</label>
+            <input type="date" id="leave-date" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="leave-reason">Reason</label>
+            <textarea id="leave-reason" class="form-control" rows="3" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit Request</button>
+        </form>
+        <div id="leave-status"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Performance Section -->
+<div id="performance" class="section">
+  <div class="card">
+    <h2>Academic Performance</h2>
+    
+    <div class="performance-summary">
+      <div class="summary-card">
+        <h3>Total Marks</h3>
+        <div class="count" id="total-marks">0</div>
+      </div>
+      <div class="summary-card">
+        <h3>Average Marks</h3>
+        <div class="count" id="avg-marks">0</div>
+      </div>
+      <div class="summary-card">
+        <h3>Highest Subject</h3>
+        <div class="subject" id="highest-subject">-</div>
+      </div>
+    </div>
+    
+    <div class="chart-container">
+      <canvas id="performance-chart" width="400" height="400"></canvas>
+    </div>
+    
+    <div id="performance-loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading performance data...</p>
+    </div>
+    
+    <table id="performance-table" style="display: none;">
+      <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Marks</th>
+          <th>Grade</th>
+          <th>Feedback</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+  <script>
+    // Global student data
+    let currentStudent = {};
+    
+    // Toggle sidebar
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const content = document.getElementById('content');
+      sidebar.classList.toggle('active');
+      content.classList.toggle('active');
+    }
+    
+    // Load section
+    function loadSection(sectionId) {
+      // Update active nav item
+      document.querySelectorAll('.sidebar ul li a').forEach(link => {
+        link.classList.remove('active');
+      });
+      document.querySelector(`.sidebar ul li a[onclick="loadSection('${sectionId}')"]`).classList.add('active');
+      
+      // Update section
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(sectionId).classList.add('active');
+      
+      // Update title
+      document.getElementById('section-title').textContent = 
+        document.querySelector(`.sidebar ul li a[onclick="loadSection('${sectionId}')"]`).textContent.trim();
+      
+      // Load section data
+      if (sectionId === 'profile') loadProfile();
+      if (sectionId === 'classes') loadClasses();
+      if (sectionId === 'teachers') loadTeachers();
+      if (sectionId === 'attendance') loadAttendance();
+      if (sectionId === 'messages') loadMessages();
+      if (sectionId === 'performance') loadPerformance();
+    }
+    
+    // Load student profile
+    async function loadProfile() {
+      const studentId = localStorage.getItem('studentId');
+      if (!studentId) {
+        alert('Please log in first.');
+        window.location.href = 'edvantage_login.html';
+        return;
+      }
+    
+      try {
+        const res = await fetch(`http://localhost:5000/students/${studentId}`);
+        if (!res.ok) throw new Error('Failed to fetch profile');
+        
+        currentStudent = await res.json();
+        
+        document.getElementById('profile-student-id').textContent = currentStudent.studentId;
+        document.getElementById('profile-name').textContent = currentStudent.name;
+        document.getElementById('profile-email').textContent = currentStudent.email;
+        document.getElementById('profile-phone').textContent = currentStudent.phone;
+        document.getElementById('profile-password').textContent = currentStudent.password;
+      } catch (error) {
+        console.error('Error loading profile:', error);
+        alert('Failed to load profile. Please try again.');
+      }
+    }
+    
+    // Load classes
+    async function loadClasses() {
+      const studentId = localStorage.getItem('studentId');
+      if (!studentId) {
+        alert('Please log in first.');
+        window.location.href = 'edvantage_login.html';
+        return;
+      }
+    
+      try {
+        const res = await fetch(`http://localhost:5000/classes?studentId=${studentId}`);
+        if (!res.ok) throw new Error('Failed to fetch classes');
+        
+        const classes = await res.json();
+        const tableBody = document.querySelector('#classes-table tbody');
+        tableBody.innerHTML = '';
+        
+        classes.forEach(cls => {
+          tableBody.innerHTML += `
+            <tr>
+              <td>${cls.name || 'N/A'}</td>
+              <td>${cls.teacher?.name || 'N/A'}</td>
+              <td>${cls.course?.name || 'N/A'}</td>
+              <td>${cls.subject?.name || 'N/A'}</td>
+            </tr>
+          `;
+        });
+        
+        document.getElementById('classes-loading').style.display = 'none';
+        document.getElementById('classes-table').style.display = 'table';
+      } catch (error) {
+        console.error('Error loading classes:', error);
+        document.getElementById('classes-loading').innerHTML = '<p style="color: var(--danger)">Failed to load classes</p>';
+      }
+    }
+    
+    // Load teachers
+    async function loadTeachers() {
+      const studentId = localStorage.getItem('studentId');
+      if (!studentId) {
+        alert('Please log in first.');
+        window.location.href = 'edvantage_login.html';
+        return;
+      }
+    
+      try {
+        const res = await fetch(`http://localhost:5000/teachers?studentId=${studentId}`);
+        if (!res.ok) throw new Error('Failed to fetch teachers');
+        
+        const teachers = await res.json();
+        const tableBody = document.querySelector('#teachers-table tbody');
+        tableBody.innerHTML = '';
+        
+        teachers.forEach(teacher => {
+          tableBody.innerHTML += `
+            <tr>
+              <td>${teacher.name}</td>
+              <td>${teacher.email || 'N/A'}</td>
+              <td>${teacher.phone || 'N/A'}</td>
+            </tr>
+          `;
+        });
+        
+        document.getElementById('teachers-loading').style.display = 'none';
+        document.getElementById('teachers-table').style.display = 'table';
+      } catch (error) {
+        console.error('Error loading teachers:', error);
+        document.getElementById('teachers-loading').innerHTML = '<p style="color: var(--danger)">Failed to load teachers</p>';
+      }
+    }
+    
+    // Load attendance
+    async function loadAttendance() {
+    const studentId = localStorage.getItem('studentId');
+    const loadingElement = document.getElementById('attendance-loading');
+    const tableElement = document.getElementById('attendance-table');
+    const summaryElement = document.querySelector('.attendance-summary');
+
+    try {
+        // Show loading state
+        loadingElement.style.display = 'block';
+        loadingElement.innerHTML = `
+            <div class="spinner"></div>
+            <p>Loading attendance data...</p>
+        `;
+        tableElement.style.display = 'none';
+        summaryElement.style.display = 'none';
+
+        // Fetch attendance data
+        const response = await fetch(`http://localhost:5000/api/attendance/student?studentId=${studentId}`);
+        if (!response.ok) throw new Error(`Server returned ${response.status}`);
+        
+        const attendanceData = await response.json();
+        
+        // Update UI
+        updateAttendanceSummary(attendanceData);
+        displayAttendanceRecords(attendanceData);
+        
+        loadingElement.style.display = 'none';
+        tableElement.style.display = 'table';
+        summaryElement.style.display = 'flex';
+        
+    } catch (error) {
+        console.error('Error loading attendance:', error);
+        loadingElement.innerHTML = `
+            <p style="color: var(--danger)">Error loading attendance: ${error.message}</p>
+            <button class="btn" onclick="loadAttendance()">Retry</button>
+        `;
+    }
+}
+
+function updateAttendanceSummary(data) {
+    const presentCount = data.filter(a => a.status === 'present').length;
+    const absentCount = data.filter(a => a.status === 'absent').length;
+    const total = presentCount + absentCount;
+    const percentage = total > 0 ? Math.round((presentCount / total) * 100) : 0;
+
+    // Update summary cards
+    document.getElementById('overall-attendance').textContent = `${percentage}%`;
+    document.getElementById('present-count').textContent = presentCount;
+    document.getElementById('absent-count').textContent = absentCount;
+
+    // Update percentage color
+    const overallEl = document.getElementById('overall-attendance');
+    overallEl.className = 'percentage ' + 
+        (percentage >= 75 ? 'high' : percentage >= 50 ? 'medium' : 'low');
+}
+function updateAttendanceSummary(data) {
+    const presentCount = data.filter(a => a.status === 'present').length;
+    const absentCount = data.filter(a => a.status === 'absent').length;
+    const total = presentCount + absentCount;
+    const percentage = total > 0 ? Math.round((presentCount / total) * 100) : 0;
+
+    document.getElementById('overall-attendance').textContent = `${percentage}%`;
+    document.getElementById('present-count').textContent = presentCount;
+    document.getElementById('absent-count').textContent = absentCount;
+
+    // Update color based on percentage
+    const overallEl = document.getElementById('overall-attendance');
+    overallEl.className = 'percentage ' + 
+        (percentage >= 75 ? 'high' : percentage >= 50 ? 'medium' : 'low');
+}
+
+function displayAttendanceRecords(data) {
+    const tableBody = document.querySelector('#attendance-table tbody');
+    tableBody.innerHTML = '';
+
+    // Sort by date (newest first)
+    const sortedData = [...data].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    sortedData.forEach(record => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${record.date ? new Date(record.date).toLocaleDateString() : 'N/A'}</td>
+            <td>${record.className || 'N/A'}</td>
+            <td class="status-${record.status || 'absent'}">${record.status || 'N/A'}</td>
+            <td>${record.teacherName || 'N/A'}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+function updateAttendanceSummary(data) {
+  const presentCount = data.filter(a => a.status === 'present').length;
+  const absentCount = data.filter(a => a.status === 'absent').length;
+  const total = presentCount + absentCount;
+  const percentage = total > 0 ? Math.round((presentCount / total) * 100) : 0;
+
+  document.getElementById('overall-attendance').textContent = `${percentage}%`;
+  document.getElementById('present-count').textContent = presentCount;
+  document.getElementById('absent-count').textContent = absentCount;
+
+  // Update color based on percentage
+  const overallEl = document.getElementById('overall-attendance');
+  overallEl.className = 'percentage ' + 
+    (percentage >= 75 ? 'high' : percentage >= 50 ? 'medium' : 'low');
+}
+
+function populateClassFilter(data) {
+  const classFilter = document.getElementById('attendance-class-filter');
+  const uniqueClasses = [...new Set(data.map(a => a.className))].filter(c => c);
+  
+  // Clear existing options except first
+  while (classFilter.options.length > 1) {
+    classFilter.remove(1);
+  }
+
+  // Add class options
+  uniqueClasses.forEach(className => {
+    const option = document.createElement('option');
+    option.value = className;
+    option.textContent = className;
+    classFilter.appendChild(option);
+  });
+
+  // Add event listener for filtering
+  classFilter.addEventListener('change', () => {
+    filterAttendanceRecords();
+  });
+}
+
+function displayAttendanceRecords(data) {
+    const tableBody = document.querySelector('#attendance-table tbody');
+    tableBody.innerHTML = '';
+
+    // Sort by date (newest first)
+    const sortedData = [...data].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    sortedData.forEach(record => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${record.date ? new Date(record.date).toLocaleDateString() : 'N/A'}</td>
+            <td>${record.className || 'N/A'}</td>
+            <td class="status-${record.status || 'absent'}">${record.status || 'N/A'}</td>
+            <td>${record.teacherName || 'N/A'}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+function filterAttendanceRecords() {
+  const classFilter = document.getElementById('attendance-class-filter').value;
+  const monthFilter = document.getElementById('attendance-month-filter').value;
+  
+  const rows = document.querySelectorAll('#attendance-table tbody tr');
+  rows.forEach(row => {
+    const className = row.cells[1].textContent;
+    const date = new Date(row.cells[0].textContent);
+    const month = date.getMonth().toString();
+    
+    const classMatch = !classFilter || className === classFilter;
+    const monthMatch = !monthFilter || month === monthFilter;
+    
+    row.style.display = classMatch && monthMatch ? '' : 'none';
+  });
+}
+    
+    // Load messages
+    async function loadMessages() {
+    const studentId = localStorage.getItem('studentId');
+    if (!studentId) {
+        alert('Please log in first.');
+        window.location.href = 'edvantage_login.html';
+        return;
+    }
+
+    try {
+        const res = await fetch(`http://localhost:5000/students/${studentId}`);
+        if (!res.ok) throw new Error('Failed to fetch student data');
+        
+        const student = await res.json();
+        const container = document.getElementById('messages-container');
+        container.innerHTML = '';
+        
+        if (!student.messages || student.messages.length === 0) {
+            container.innerHTML = '<p>No messages found.</p>';
+            return;
+        }
+        
+        // Display messages in reverse chronological order (newest first)
+        student.messages.reverse().forEach(msg => {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            messageDiv.innerHTML = `
+                <h3>Leave Request Update</h3>
+                <p>${msg}</p>
+                <hr>
+            `;
+            container.appendChild(messageDiv);
+        });
+    } catch (error) {
+        console.error('Error loading messages:', error);
+        document.getElementById('messages-container').innerHTML = 
+            '<p style="color: var(--danger)">Failed to load messages</p>';
+    }
+}
+    
+    // Submit leave request
+    document.getElementById('leave-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const studentId = localStorage.getItem('studentId');
+      if (!studentId) {
+        alert('Please log in first.');
+        window.location.href = 'edvantage_login.html';
+        return;
+      }
+      
+      const date = document.getElementById('leave-date').value;
+      const reason = document.getElementById('leave-reason').value;
+      
+      try {
+        const res = await fetch('http://localhost:5000/leave-requests', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            studentId,
+            studentName: currentStudent.name,
+            leaveDate: date,
+            reason
+          })
+        });
+        
+        if (!res.ok) throw new Error('Failed to submit leave request');
+        
+        document.getElementById('leave-status').innerHTML = `
+          <p style="color: var(--success)">Leave request submitted successfully!</p>
+        `;
+        document.getElementById('leave-form').reset();
+        
+        setTimeout(() => {
+          document.getElementById('leave-status').innerHTML = '';
+        }, 3000);
+      } catch (error) {
+        console.error('Error submitting leave request:', error);
+        document.getElementById('leave-status').innerHTML = `
+          <p style="color: var(--danger)">Failed to submit leave request: ${error.message}</p>
+        `;
+      }
+    });
+
+    // Load performance data
+    async function loadPerformance() {
+  const studentId = localStorage.getItem('studentId');
+  if (!studentId) {
+    console.error('No studentId found in localStorage');
+    return;
+  }
+
+  try {
+    const res = await fetch(`http://localhost:5000/performance/${studentId}`);
+    const data = await res.json();
+    console.log("Fetched performance data:", data);
+
+    if (data && data.length > 0) {
+      let total = 0;
+      let highest = { name: '', score: 0 };
+      const tbody = document.querySelector('#performance-table tbody');
+      tbody.innerHTML = '';
+
+      data.forEach(entry => {
+        const subject = entry.subject;
+        const marks = entry.marks;
+        const sum = Object.values(marks).reduce((acc, val) => acc + (val || 0), 0);
+        total += sum;
+
+        if (sum > highest.score) {
+          highest = { name: subject, score: sum };
+        }
+
+        const grade = sum >= 135 ? 'A' : sum >= 120 ? 'B' : sum >= 90 ? 'C' : sum >= 60 ? 'D' : 'F';
+        const feedback = grade === 'A' ? 'Excellent' : grade === 'B' ? 'Good' : grade === 'C' ? 'Average' : 'Needs Improvement';
+
+        tbody.innerHTML += `
+          <tr>
+            <td>${subject}</td>
+            <td>${sum}</td>
+            <td class="grade-${grade}">${grade}</td>
+            <td>${feedback}</td>
+          </tr>`;
+      });
+
+      const avg = data.length ? Math.round(total / data.length) : 0;
+
+      document.getElementById('total-marks').textContent = total;
+      document.getElementById('avg-marks').textContent = avg;
+      document.getElementById('highest-subject').textContent = highest.name;
+
+      document.getElementById('performance-loading').style.display = 'none';
+      document.getElementById('performance-table').style.display = 'table';
+    } else {
+      console.log('No performance records found for this student.');
+      document.getElementById('performance-loading').textContent = 'No performance records available.';
+    }
+  } catch (err) {
+    console.error('Error loading performance:', err);
+  }
+}
+
+
+
+
+function updatePerformanceSummary(data) {
+    // Calculate totals
+    const totalMarks = data.reduce((sum, subject) => sum + subject.marks, 0);
+    const avgMarks = data.length > 0 ? (totalMarks / data.length).toFixed(1) : 0;
+    
+    // Find highest subject
+    const highestSubject = data.length > 0 ? 
+        data.reduce((max, subject) => subject.marks > max.marks ? subject : max) : 
+        null;
+    
+    // Update UI
+    document.getElementById('total-marks').textContent = totalMarks;
+    document.getElementById('avg-marks').textContent = avgMarks;
+    document.getElementById('highest-subject').textContent = 
+        highestSubject ? `${highestSubject.name}: ${highestSubject.marks}` : '-';
+}
+
+function displayPerformanceTable(data) {
+    const tableBody = document.querySelector('#performance-table tbody');
+    tableBody.innerHTML = '';
+    
+    // Sort by marks (highest first)
+    const sortedData = [...data].sort((a, b) => b.marks - a.marks);
+    
+    // Inside loadPerformance(), dynamically update the table content
+data.forEach(entry => {
+  const row = document.createElement('tr');
+  row.innerHTML = `
+    <td>${entry.subject}</td>
+    <td>${entry.marks}</td>
+    <td>${entry.grade}</td>
+    <td>${entry.feedback}</td>
+  `;
+  tableBody.appendChild(row);
+});
+
+}
+
+function getGrade(marks) {
+    if (marks >= 90) return 'A';
+    if (marks >= 80) return 'B';
+    if (marks >= 70) return 'C';
+    if (marks >= 60) return 'D';
+    return 'F';
+}
+
+function renderPerformanceChart(data) {
+    const ctx = document.getElementById('performance-chart').getContext('2d');
+    
+    // Prepare data for chart
+    const labels = data.map(subject => subject.name);
+    const marksData = data.map(subject => subject.marks);
+    const backgroundColors = data.map(subject => {
+        const grade = getGrade(subject.marks);
+        switch(grade) {
+            case 'A': return '#2ecc71';
+            case 'B': return '#3498db';
+            case 'C': return '#f1c40f';
+            case 'D': return '#e67e22';
+            default: return '#e74c3c';
+        }
+    });
+    
+    // Create chart
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: marksData,
+                backgroundColor: backgroundColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'right',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.label}: ${context.raw} marks (${getGrade(context.raw)})`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+    // Add this temporary test function to your students.html
+async function testBackendConnection() {
+  try {
+    const response = await fetch('http://localhost:5000/');
+    console.log('Backend connection test:', response.status, await response.text());
+  } catch (error) {
+    console.error('Backend connection failed:', error);
+  }
+}
+
+// Call it when the page loads
+window.onload = () => {
+  testBackendConnection();
+  loadProfile();
+};
+    
+    // Logout
+    function logout() {
+      localStorage.removeItem('studentId');
+      window.location.href = 'edvantage_login.html';
+    }
+    
+    // Initialize
+    window.onload = () => {
+      loadProfile();
+    };
+  </script>
+</body>
+</html>
